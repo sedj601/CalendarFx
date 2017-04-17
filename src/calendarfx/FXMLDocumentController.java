@@ -13,9 +13,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 /**
  *
@@ -52,12 +55,12 @@ public class FXMLDocumentController implements Initializable
     
     @FXML private void handleBTNMonthChange(ActionEvent event)
     {
-        if(((Button)event.getSource()).getId().equals("btnPreviousMonth"))
+        if(((Button)event.getSource()).getId().equals("leftButtonWithImage"))
         {
             ldtControl = ldtControl.minusMonths(1);
             loadMonth(ldtControl);
         }
-        else if(((Button)event.getSource()).getId().equals("btnNextMonth"))
+        else if(((Button)event.getSource()).getId().equals("rightButtonWithImage"))
         {
             ldtControl = ldtControl.plusMonths(1);
             loadMonth(ldtControl);
@@ -94,7 +97,8 @@ public class FXMLDocumentController implements Initializable
             
             Label tempLabel = new Label(Integer.toString(ldtIterator.getDayOfMonth()));
             GridPane.setHalignment(tempLabel, HPos.CENTER);
-            gpMain.add(tempLabel, ldtIterator.getDayOfWeek().getValue() - 1, i);
+            
+            gpMain.add(createCell(tempLabel), ldtIterator.getDayOfWeek().getValue() - 1, i);
             
             ldtIterator = ldtIterator.plusDays(1);
         }        
@@ -109,5 +113,22 @@ public class FXMLDocumentController implements Initializable
             GridPane.setHalignment(tempLabel, HPos.CENTER);
             gpMain.add(tempLabel, i, 0);
         }       
+    }
+    
+    private BorderPane createCell(Label label) {
+
+        BorderPane cell = new BorderPane();
+        cell.setOnMouseClicked(e -> System.out.println("cell containing " + label.getText() + " was clicked!"));
+        label.setOnMouseClicked(e -> System.out.println(((Label)e.getSource()).getText()));
+        
+//        Circle circle = new Circle(10, Color.CORNFLOWERBLUE);
+//
+//        circle.visibleProperty().bind(cellSwitch);
+
+        BorderPane.setAlignment(label, Pos.TOP_RIGHT);
+        cell.setTop(label);
+        cell.getStyleClass().add("cell");
+        
+        return cell;
     }
 }
